@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Timer : MonoBehaviour
@@ -32,8 +33,7 @@ public class Timer : MonoBehaviour
 
             if (counter >= 50)
             {
-                Debug.Log("reached 50");
-                Destroy(gameObject,0f);
+                SceneManager.LoadScene(5);
             }
 
             yield return new WaitForSeconds(0.5f);

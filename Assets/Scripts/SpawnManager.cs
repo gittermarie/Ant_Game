@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,8 @@ public class SpawnManager : MonoBehaviour
 {
     private Random rand = new Random();
     private bool unpaused = true;
+    private float xBounds = 8;
+    private float yBounds = 3;
     private int[] hillcounter = {0, 0, 0, 0};
     private int[] leafcounter = {0, 0, 0, 0};
     
@@ -44,17 +47,25 @@ public class SpawnManager : MonoBehaviour
                 random = RandomTileGenerator();
                 i++;
             }
-            if (hillcounter[color] == 0 || leafcounter[color] > 2)
+            if (hillcounter[color] > 0 && leafcounter[color] < 3)
+            {
+                hillsandleafsmap.SetTile(random, leafs[color]);
+                leafcounter[color] += 1;
+                
+                //whenever a leaf is set and the bounds are still within the limit
+                // raise the bounds slightly
+                if ((int)Math.Round(xBounds, 0) < 15)
+                {
+                    xBounds = xBounds + 0.2f;
+                    yBounds = yBounds + 0.2f;
+                }
+            }
+            else 
             {
                 hillsandleafsmap.SetTile(random, antHills[color]);
                 anthillmanager.AddAnthill(random, color);
                 hillcounter[color] += 1;
                 leafcounter[color] = 0;
-            }
-            else 
-            {
-                hillsandleafsmap.SetTile(random, leafs[color]);
-                leafcounter[color] += 1;
             }
             yield return new WaitForSeconds(rand.Next(1, 10));
         }
@@ -63,8 +74,8 @@ public class SpawnManager : MonoBehaviour
 
     private Vector3Int RandomTileGenerator()
     {
-        int x = rand.Next(-10, 10);
-        int y = rand.Next(-5, 5);
+        int x = rand.Next(-(int)Math.Round(xBounds, 0), (int)Math.Round(xBounds, 0));
+        int y = rand.Next(-(int)Math.Round(yBounds, 0), (int)Math.Round(yBounds, 0));
         return new Vector3Int(x, y, 0);
     }
 

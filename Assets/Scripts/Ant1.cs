@@ -50,6 +50,7 @@ public class Ant1 : MonoBehaviour
         nextposition = position;
         reversetrajectory.Push(position);
         move = nextposition - position;
+        hasreturned = true;
     }
     void FixedUpdate()
     {
@@ -66,7 +67,7 @@ public class Ant1 : MonoBehaviour
             if (Vector3.SqrMagnitude(transform.position - (nextposition + shift)) < 0.0002)
             {
                 UpdateMovement();
-                if (!explore && Vector3.SqrMagnitude(transform.position - anthill) < 0.0002)
+                if (!explore && Vector3.SqrMagnitude(transform.position - anthill) < 0.9)
                 {
                     Instantiate(pointText, transform.position, Quaternion.identity);
                     scoremanager.AddPoint();
@@ -116,7 +117,6 @@ public class Ant1 : MonoBehaviour
             // check if any neighbour fulfills the goal criteria
             if (hillsandleafsmap.GetTile(nextposition + neighbour) == leafs[color])
             {
-                Debug.Log("FOUND GOAL");
                 explore = false;
                 moveForward = false;
                 reversetrajectory.Push(nextposition+neighbour);
@@ -233,8 +233,8 @@ public class Ant1 : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D col)
-    {
-        //Debug.Log("triggered");
+    {//
+        
     }
 
     public Vector3 getPos()

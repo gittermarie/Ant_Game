@@ -7,7 +7,7 @@ using UnityEngine.Tilemaps;
 public class Anthill
 {
     public int returncounter;
-    public Ant1[] ants = new Ant1[5];
+    public Ant1[] ants = new Ant1[10];
     public int antcount = 0;
     public GameObject counter;
     public bool counterset = false;

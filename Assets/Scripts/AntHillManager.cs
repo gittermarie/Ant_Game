@@ -12,8 +12,9 @@ public class AntHillManager : MonoBehaviour
     [SerializeField] private Tilemap hillsandleafsmap;
     [SerializeField] private Tilemap roadmap;
     private bool unpaused = true;
-    private float _delay = 10f;
+    private float _delay = 3f;
     private List<Anthill> anthills = new List<Anthill>();
+    private int rounds = 0;
 
     public void AddAnthill(Vector3Int position, int color)
     {
@@ -60,33 +61,34 @@ public class AntHillManager : MonoBehaviour
                     }
                 }
 
-                Debug.Log(anthill.antcount);
-                // Check how many ants have returned since the last update
-                for (int i = 0; i < anthill.antcount; i++)
+                if (rounds > 30)
                 {
-                    Debug.Log(anthill.ants[i].hasreturned);
-                    if (anthill.ants[i].hasreturned)
+                    // Check how many ants have returned since the last update
+                    for (int i = 0; i < anthill.antcount; i++)
                     {
-                        Debug.Log("true");
-                        anthill.returncounter++;
-                        anthill.ants[i].hasreturned = false;
+                        if (anthill.ants[i].hasreturned)
+                        {
+                            anthill.returncounter++;
+                            anthill.ants[i].hasreturned = false;
+                        }
                     }
+                    
+                    // if no ants have returned
+                    // start gameover counter
+                    if (anthill.returncounter < 1 && anthill.counterset == false)
+                    {
+                        anthill.counter = Instantiate(timer, anthill.getPos(), Quaternion.identity);
+                        anthill.counterset = true;
+                    }
+                    else if (anthill.returncounter >= 1 && anthill.counterset)
+                    {
+                        Destroy(anthill.counter);
+                        anthill.counterset = false;
+                    }
+                    anthill.returncounter = 0;
                 }
-                Debug.Log(anthill.returncounter);
-                // if no ants have returned
-                // start gameover counter
-                if (anthill.returncounter < 1 && anthill.counterset == false)
-                {
-                    anthill.counter = Instantiate(timer, anthill.getPos(), Quaternion.identity);
-                    anthill.counterset = true;
-                }
-                else if (anthill.returncounter > 1 && anthill.counterset == true)
-                {
-                    Destroy(anthill.counter);
-                    anthill.counterset = false;
-                }
-                anthill.returncounter = 0;
             }
+            rounds++;
             yield return new WaitForSeconds(_delay);
         }
         
