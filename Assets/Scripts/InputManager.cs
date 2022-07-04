@@ -101,7 +101,7 @@ public class InputManager : MonoBehaviour
             {
                 Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
                 Vector3Int clickPos = roadmap.WorldToCell(mouseWorldPos);
-                if (roadmap.GetTile(clickPos) == null)
+                if (!roadmap.HasTile(clickPos))
                 {
                     roadmap.SetTile(clickPos, transparentroadTile);
                     road.Add(clickPos);
@@ -138,7 +138,9 @@ public class InputManager : MonoBehaviour
             {
                 Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
                 Vector3Int clickPos = roadmap.WorldToCell(mouseWorldPos);
-                DeleteRoad(roadManager.GetRoad(clickPos));
+                List<Vector3Int> deletedRoad = roadManager.GetRoad(clickPos);
+                DeleteRoad(deletedRoad);
+                roadManager.RemoveRoad(deletedRoad);
             }
         }
     }
@@ -159,7 +161,7 @@ public class InputManager : MonoBehaviour
     {
         foreach (Vector3Int tilePos in roadList)
         {
-            if (hillsandleafsmap.GetTile(tilePos) != null)
+            if (hillsandleafsmap.HasTile(tilePos))
             {
                 return false;
             }
@@ -179,8 +181,8 @@ public class InputManager : MonoBehaviour
         int counter = 0;
         foreach (Vector3Int neighbour in neighbourPositions)
         {
-            if (hillsandleafsmap.GetTile(tile + neighbour) != null ||
-                (roadmap.GetTile(tile + neighbour) != null))
+            if (hillsandleafsmap.HasTile(tile + neighbour) ||
+                (roadmap.HasTile(tile + neighbour)))
             {
                 counter++;
             }

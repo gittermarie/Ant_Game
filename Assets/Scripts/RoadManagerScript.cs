@@ -16,6 +16,11 @@ public class RoadManagerScript : MonoBehaviour
         _roadArray.Add(road);
     }
 
+    public void RemoveRoad(List<Vector3Int> road)
+    {
+        _roadArray.Remove(road);
+    }
+
 
     public List<Vector3Int> GetRoad(Vector3Int tile)
         // search for tile vector in road array (road array contains all previously added road vectors)

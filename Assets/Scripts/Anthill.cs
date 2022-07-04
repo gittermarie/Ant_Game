@@ -6,9 +6,11 @@ using UnityEngine.Tilemaps;
 
 public class Anthill
 {
-    private Ant[] ants;
-    public int antcount;
-    public int countdown;
+    public int returncounter;
+    public Ant1[] ants = new Ant1[5];
+    public int antcount = 0;
+    public GameObject counter;
+    public bool counterset = false;
     private Vector3Int pos;
     private int color;
 
@@ -29,9 +31,9 @@ public class Anthill
         return this.color;
     }
 
-    public void PrintThis()
+    public void AddAnt(Ant1 ant)
     {
-        Debug.Log(color);
-        Debug.Log(pos);
+        ants[antcount] = ant;
+        antcount++;
     }
 }

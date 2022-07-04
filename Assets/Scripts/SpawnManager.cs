@@ -44,7 +44,7 @@ public class SpawnManager : MonoBehaviour
                 random = RandomTileGenerator();
                 i++;
             }
-            if (hillcounter[color] == 0 || leafcounter[color] > 4)
+            if (hillcounter[color] == 0 || leafcounter[color] > 2)
             {
                 hillsandleafsmap.SetTile(random, antHills[color]);
                 anthillmanager.AddAnthill(random, color);
@@ -56,7 +56,7 @@ public class SpawnManager : MonoBehaviour
                 hillsandleafsmap.SetTile(random, leafs[color]);
                 leafcounter[color] += 1;
             }
-            yield return new WaitForSeconds(rand.Next(3, 10));
+            yield return new WaitForSeconds(rand.Next(1, 10));
         }
         
     }
@@ -70,15 +70,30 @@ public class SpawnManager : MonoBehaviour
 
     private bool CheckTileStatus(Vector3Int position)
     {
-        if (roadmap.GetTile(position) == null 
-            && hillsandleafsmap.GetTile(position) == null)
+        if (!roadmap.HasTile(position)
+            && !hillsandleafsmap.HasTile(position))
         {
-            return true;
+            for (int xpos = -1; xpos <= 1; xpos++)
+            {
+                for (int ypos = -1; ypos <= 1; ypos++)
+                {
+                    Vector3Int neighbour = new Vector3Int(xpos, ypos, 0);
+                    if (!roadmap.HasTile(position + neighbour)
+                        && !hillsandleafsmap.HasTile(position + neighbour))
+                    {
+                        // don't return yet
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
         }
         else
         {
             return false;
         }
-
+        return true;
     }
 }
